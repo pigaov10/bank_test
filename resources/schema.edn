@@ -1,0 +1,34 @@
+[{:db/id #:db/id[:db.part/db]
+  :db/doc "Checking Account Number"
+  :db/ident :account/number
+  :db/valueType :db.type/bigint
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #:db/id[:db.part/db]
+  :db/doc "Transactions"
+  :db/ident :transactions
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #:db/id[:db.part/db]
+  :db/doc "Transaction Description"
+  :db/ident :transaction/description
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #:db/id[:db.part/db]
+  :db/doc "Transaction Amount"
+  :db/ident :transaction/amount
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}
+
+ {:db/id #:db/id[:db.part/db]
+  :db/doc "Transaction Date"
+  :db/ident :transaction/date
+  :db/valueType :db.type/instant
+  :db/cardinality :db.cardinality/one
+  :db.install/_attribute :db.part/db}]
