@@ -13,11 +13,38 @@
 )
 
 
+
 (defn get-last-operations-by-account
   "Creates a map with the last detail transactions"
   [checking-account-number]
   (get-in @accounts [:checking-accounts checking-account-number :operations]))
 
+
+accounts
+
+
+
+(def data '({:date "2005-11-13", :value 0}
+         {:date "2005-11-15", :value 1}
+         {:date "2007-08-02", :value 2}
+         {:date "2007-08-04", :value 3}))
+(print (filter
+         #(and
+               (> (compare (% :date) "2005-11-14") 0)
+               (< (compare (% :date) "2007-08-03") 0))
+         data))
+
+
+(defn third_step
+  "returns the bank statement of an account given"
+  [account-number]
+  (let [operation (get-in @accounts [:checking-accounts account-number :operations])]
+  (group-by :operation/purchase-date operation)
+  (filter
+    #(and
+         (> (compare (% :operation/purchase-date) "2005-11-14") 0)
+         (< (compare (% :operation/purchase-date) "2018-08-03") 0))
+    operation)))
 
 
 (defn balance

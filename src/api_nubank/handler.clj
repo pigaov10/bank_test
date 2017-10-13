@@ -13,6 +13,12 @@
     (let [cast-id (read-string id)]
       (response (get-last-operations-by-account cast-id) )))
 
+
+  (GET "/statement/:id" [id]
+    (let [cast-id (read-string id)]
+      (response (third_step 12345) )))
+
+
   (GET "/balance/:id" [id]
     (let [cast-id (read-string id)]
       (response {:checking-account id

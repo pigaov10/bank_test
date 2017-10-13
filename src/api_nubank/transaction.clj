@@ -18,6 +18,6 @@
            conj {:operation/description description
                  :operation/amount amount
                  :operation/type type
-                 :operation/purchase-date (now)})) accounts)
+                 :operation/purchase-date "2017-08-01"})) accounts)
 
 
