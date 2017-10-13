@@ -19,3 +19,5 @@
                  :operation/amount amount
                  :operation/type type
                  :operation/purchase-date (now)})) accounts)
+
+

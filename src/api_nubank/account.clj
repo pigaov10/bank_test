@@ -3,7 +3,7 @@
 (defn now [] (new java.util.Date))
 
 (def accounts (atom {:bank/fullname "Nu Pagamentos S.A."
-                    :checking-accounts {} }))
+                     :checking-accounts {} }))
 
 (def new-account {:account/name "Checking Account"
                   :account/created (now)
