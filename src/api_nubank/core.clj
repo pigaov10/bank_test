@@ -5,9 +5,11 @@
 (create-checking-account 12345)
 (create-checking-account 56789)
 
-(-> accounts (create-operation 12345 "purchase" "Amazon.Com.Br" 87.45))
-(-> accounts (create-operation 12345 "purchase" "Uber do Brasil Tecnologia Ltda." 30.03))
+(-> accounts (create-operation 12345 "withdrawal" "ATM withdrawal" 50.00))
+(-> accounts (create-operation 12345 "deposit" "Online Deposit" 1000.00))
+(-> accounts (create-operation 12345 "purchase" "Digital Ocean Sistemas" 12.00))
 
+(-> accounts (create-operation 56789 "purchase" "Digital Ocean Sistemas" 5.00))
 
 (defn get-last-operations-by-account
   "Creates a map with the last detail transactions"
