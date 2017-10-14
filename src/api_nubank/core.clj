@@ -32,10 +32,6 @@
   ))
 
 
-;; (group-by :operation/purchase-date (third_step 12345)
-;;           assoc)
-
-
 (defn balance
   "Creates a map with the last detail transactions"
   [checking-account-number]

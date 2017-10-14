@@ -16,7 +16,7 @@
 
   (GET "/statement/:id" [id]
     (let [cast-id (read-string id)]
-      (response (group-by :operation/purchase-date (third_step cast-id)) )))
+      (response (testando) )))
 
 
   (GET "/balance/:id" [id]
