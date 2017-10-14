@@ -7,12 +7,11 @@
 (create-checking-account customer)
 
 (-> accounts
-       (create-operation customer "deposit" "Online Deposit" 3000.00)
-;;     (create-operation customer "withdrawal" "ATM withdrawal" -50.00)
-;;     (create-operation customer "purchase" "Digital Ocean Sistemas" -12.00)
+       (create-operation customer "deposit" "Online Deposit" 3000.00 "2017-08-01")
+       (create-operation customer "withdrawal" "ATM withdrawal" -50.00 "2017-08-01")
+       (create-operation customer "purchase" "Digital Ocean Sistemas" -12.00 "2017-08-02")
 )
 
-accounts
 
 (defn get-last-operations-by-account
   "Creates a map with the last detail transactions"
@@ -31,6 +30,10 @@ accounts
          (< (compare (% :operation/purchase-date) "2018-08-03") 0))
     operation)
   ))
+
+
+;; (group-by :operation/purchase-date (third_step 12345)
+;;           assoc)
 
 
 (defn balance

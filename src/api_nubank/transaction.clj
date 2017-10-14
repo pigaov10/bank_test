@@ -11,13 +11,13 @@
   <type> (PURCHASE, DEPOSIT, WITHDRAWAL)
   <description> A short description about operation
   <amount> transaction amount"
-  [accounts checking-account-number type description amount]
+  [accounts checking-account-number type description amount date]
   (get-in @accounts [:checking-accounts checking-account-number]
     (swap! accounts
            update-in [:checking-accounts checking-account-number :operations]
            conj {:operation/description description
                  :operation/amount amount
                  :operation/type type
-                 :operation/purchase-date "2017-08-01"})) accounts)
+                 :operation/purchase-date date})) accounts)
 
 
