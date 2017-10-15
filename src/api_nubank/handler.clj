@@ -11,12 +11,7 @@
 
   (GET "/operations/:id" [id]
     (let [cast-id (read-string id)]
-      (response (get-last-operations-by-account cast-id) )))
-
-
-  (GET "/statement/:id" [id]
-    (let [cast-id (read-string id)]
-      (response (testando) )))
+      (response (get-operations-by-range-date cast-id "2016-01-01" "2017-09-10") )))
 
 
   (GET "/balance/:id" [id]
@@ -24,13 +19,12 @@
       (response {:checking-account id
                  :current-balance (balance cast-id)} )))
 
-  (POST "/first" request
-    (let [name (or (get-in request [:params :name])
-                   (get-in request [:body :name])
-                   "John Doe")]
-      {:status 200
-       :body {:name name
-       :desc (str "The name you sent to me was " name)}}))
+  (POST "/operation" request
+    (let [number (read-string (get-in request [:body :account]))
+          type (get-in request [:body :type])
+          desc (get-in request [:body :desc])
+          amount (get-in request [:body :amount])]
+      (response (recieve-http-operation number type desc amount))))
   (route/resources "/")
 
   (route/not-found "Not Found"))
