@@ -11,7 +11,7 @@
 
   (GET "/operations/:id" [id]
     (let [cast-id (read-string id)]
-      (response (get-operations-by-range-date cast-id "2016-01-01" "2017-09-10") )))
+      (response (return-balance-statement cast-id) )))
 
 
   (GET "/balance/:id" [id]

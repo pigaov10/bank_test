@@ -2,8 +2,8 @@
 
 (defn now [] (new java.util.Date))
 
-(def accounts (atom {:bank/fullname "Nu Pagamentos S.A."
-                     :checking-accounts {} }))
+(defonce accounts (atom {:bank/fullname "Nu Pagamentos S.A."
+                         :checking-accounts {} }))
 
 (def new-account {:account/name "Checking Account"
                   :account/created (now)
@@ -17,6 +17,3 @@
   (swap! accounts
         update-in [:checking-accounts]
         assoc checking-account-number new-account ))
-
-
-
