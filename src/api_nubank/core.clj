@@ -5,11 +5,21 @@
             [api-nubank.transaction :refer [create-operation]]))
 
 
+
+;; (defn create-account
+;;   "Create a checking account
+;;   <account-number> Checking Account Number"
+;;   [account-number]
+;;   (create-checking-account account-number))
+
+
+;; (defn list-accounts [] @accounts)
+
+
 (defn get-last-operations-by-account
   "Creates a map with the last detail transactions"
-  [checking-account-number]
-  (get-in @accounts [:checking-accounts checking-account-number :operations]))
-
+  [account-number]
+  (get-in @accounts [:checking-accounts account-number :operations]))
 
 
 ;; Step One
@@ -19,15 +29,15 @@
 
 (defn create-operation-given-account
   "Creates a map with the last detail transactions
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number"
-  [cc-number type desc amount]
+  <account-number> Checking Account Number
+  <type> Transaction Type (PURCHASE, DEPOSIT, WITHDRAWAL)
+  <desc> Transaction Description
+  <amount> Transaction Amount
+  <idate> Date of transaction"
+  [account-number type desc amount idate]
   (-> accounts
-    (create-operation cc-number type desc amount "2017-08-10"))
-      (get-last-operations-by-account cc-number))
-
+    (create-operation account-number type desc amount idate))
+      (get-last-operations-by-account account-number))
 
 
 ;; Step Two - returns the current balance of a given account
@@ -35,11 +45,10 @@
 
 (defn get-current-balance
   "Creates a map with the last detail transactions
-  <checking-account-number> CC Number"
-  [checking-account-number]
-  (let [operations (get-last-operations-by-account checking-account-number)]
-    (get (first operations) :operation/balance) ))
-
+  <checking-account-number> Checking Account Number"
+  [account-number]
+  (let [operations (get-last-operations-by-account account-number)]
+    (get (last operations) :operation/balance) ))
 
 
 ;; Step Three
@@ -49,19 +58,25 @@
 
 (defn get-bank-statement-given-account
   "returns the bank statement of an account given
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number"
+  <account-number> Checking Account Number
+  <start-date> Start Date
+  <end-date> End Date"
   [account-number start-date end-date]
-  (let [operation (get-in @accounts [:checking-accounts account-number :operations])]
-  (filter
-    #(and
-         (> (compare (% :operation/purchase-date) start-date) 0)
-         (< (compare (% :operation/purchase-date) end-date) 0))
-    operation)
-    (->> operation (group-by :operation/purchase-date))
+  (let [operation (get-last-operations-by-account account-number)]
+    (->> operation
+      (filter
+      #(and
+           (>= (compare (% :operation/purchase-date) start-date) 0)
+           (<= (compare (% :operation/purchase-date) end-date) 0)))
+      (group-by :operation/purchase-date))
 ))
 
+
+;; (create-checking-account 12345)
+
+(-> accounts (create-operation 12345 "Purchase" "Uber" -7000.43 "2017-08-08" ))
+
+accounts
 
 ;; Step Four
 ;; returns the periods which the account's balance
@@ -69,17 +84,21 @@
 ;; periods when the bank can
 ;; charge interest on that account
 
-(defn get-bank-statement-given-account
+(defn get-period-account-was-balance-negative
   "returns the periods which the account's balance was negative
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number
-  <checking-account-number> CC Number"
+  <account-number> Checking Account Number
+  <start-date> Start negative date
+  <end-date> End negative date"
   [account-number start-date end-date]
-  (let [operation (get-last-operations-by-account checking-account-number)]
-  (filter
-    #(and
-         (> (compare (% :operation/purchase-date) start-date) 0)
-         (< (compare (% :operation/purchase-date) end-date) 0))
-    operation)
-    (->> operation (group-by :operation/purchase-date))
+  (let [operation (get-last-operations-by-account account-number)]
+   (->> operation (reduce-kv (fn [mp key value]
+                  (if (neg? (get-in operation [key :operation/balance]))
+                  (conj mp value)
+                  (println (str "It's not negative" value) )))
+                  {})
+                  (group-by :operation/purchase-date))
 ))
+
+
+
+;; (get-period-account-was-balance-negative 12345 "2017-08-01" "2017-10-10")

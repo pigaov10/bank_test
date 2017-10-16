@@ -9,10 +9,20 @@
 
 (defroutes app-routes
 
-  (GET "/operations/:id" [id]
-    (let [cast-id (read-string id)]
-      (response (get-bank-statement-given-account cast-id "2017-08-08" "2017-08-10") )))
 
+  (POST "/create_account" request
+    (let [number (read-string (get-in request [:body :account]))]
+      (response (create-account number))))
+
+  (GET "/list_accounts"
+       []
+    (response (list-accounts) ))
+
+  (GET "/operations*" {params :query-params}
+    (let [cast-id (read-string (get params "account_id"))
+          sdate (get params "start_date")
+          edate (get params "end_date")]
+       (response (get-bank-statement-given-account cast-id sdate edate) )))
 
   (GET "/balance/:id" [id]
     (let [cast-id (read-string id)]
@@ -23,9 +33,12 @@
     (let [number (read-string (get-in request [:body :account]))
           type (get-in request [:body :type])
           desc (get-in request [:body :desc])
+          idate (get-in request [:body :transaction_date])
           amount (get-in request [:body :amount])]
-      (response (create-operation-given-account number type desc amount))))
+      (response (create-operation-given-account number type desc amount idate))))
   (route/resources "/")
+
+
 
   (route/not-found "Not Found"))
 
