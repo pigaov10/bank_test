@@ -18,6 +18,11 @@
            conj {:operation/description description
                  :operation/amount amount
                  :operation/type type
+                 :operation/balance (+ amount (reduce + 0
+                                              (map :operation/amount
+                                              (get-in @accounts [:checking-accounts
+                                                                 checking-account-number
+                                                                 :operations]))))
                  :operation/purchase-date date})) accounts)
 
 

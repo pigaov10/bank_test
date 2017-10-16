@@ -11,20 +11,20 @@
 
   (GET "/operations/:id" [id]
     (let [cast-id (read-string id)]
-      (response (return-balance-statement cast-id) )))
+      (response (get-bank-statement-given-account cast-id "2017-08-08" "2017-08-10") )))
 
 
   (GET "/balance/:id" [id]
     (let [cast-id (read-string id)]
       (response {:checking-account id
-                 :current-balance (balance cast-id)} )))
+                 :current-balance (get-current-balance cast-id)} )))
 
   (POST "/operation" request
     (let [number (read-string (get-in request [:body :account]))
           type (get-in request [:body :type])
           desc (get-in request [:body :desc])
           amount (get-in request [:body :amount])]
-      (response (recieve-http-operation number type desc amount))))
+      (response (create-operation-given-account number type desc amount))))
   (route/resources "/")
 
   (route/not-found "Not Found"))
