@@ -8,21 +8,26 @@
 
 
 (defroutes app-routes
-
+;;   API is running
 
   (POST "/create_account" request
     (let [number (read-string (get-in request [:body :account]))]
       (response (create-account number))))
 
-  (GET "/list_accounts"
-       []
-    (response (list-accounts) ))
 
   (GET "/operations*" {params :query-params}
     (let [cast-id (read-string (get params "account_id"))
           sdate (get params "start_date")
           edate (get params "end_date")]
        (response (get-bank-statement-given-account cast-id sdate edate) )))
+
+
+  (GET "/negative*" {params :query-params}
+    (let [cast-id (read-string (get params "account_id"))
+          sdate (get params "start_date")
+          edate (get params "end_date")]
+       (response (get-period-account-was-balance-negative cast-id sdate edate) )))
+
 
   (GET "/balance/:id" [id]
     (let [cast-id (read-string id)]
@@ -33,7 +38,7 @@
     (let [number (read-string (get-in request [:body :account]))
           type (get-in request [:body :type])
           desc (get-in request [:body :desc])
-          idate (get-in request [:body :transaction_date])
+          idate (get-in request [:body :schedule_date])
           amount (get-in request [:body :amount])]
       (response (create-operation-given-account number type desc amount idate))))
   (route/resources "/")

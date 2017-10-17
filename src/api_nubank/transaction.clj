@@ -25,4 +25,3 @@
                                                                  :operations]))))
                  :operation/purchase-date date})) accounts)
 
-

@@ -5,21 +5,18 @@
             [api-nubank.transaction :refer [create-operation]]))
 
 
-
-;; (defn create-account
-;;   "Create a checking account
-;;   <account-number> Checking Account Number"
-;;   [account-number]
-;;   (create-checking-account account-number))
-
-
-;; (defn list-accounts [] @accounts)
-
-
 (defn get-last-operations-by-account
   "Creates a map with the last detail transactions"
   [account-number]
   (get-in @accounts [:checking-accounts account-number :operations]))
+
+
+
+(defn create-account
+  "Create a checking account
+  <account-number> Checking Account Number"
+  [account-number]
+  (create-checking-account account-number))
 
 
 ;; Step One
@@ -48,7 +45,7 @@
   <checking-account-number> Checking Account Number"
   [account-number]
   (let [operations (get-last-operations-by-account account-number)]
-    (get (last operations) :operation/balance) ))
+    (get (first operations) :operation/balance) ))
 
 
 ;; Step Three
@@ -71,12 +68,6 @@
       (group-by :operation/purchase-date))
 ))
 
-
-;; (create-checking-account 12345)
-
-(-> accounts (create-operation 12345 "Purchase" "Uber" -7000.43 "2017-08-08" ))
-
-accounts
 
 ;; Step Four
 ;; returns the periods which the account's balance
