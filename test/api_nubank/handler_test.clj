@@ -65,18 +65,20 @@
 )
 
 
-;; (deftest test-if-date-is-negative
+(deftest test-if-date-is-negative
 
-;;   (testing "Creating an operation that turns a balance negative"
-;;     ;; Testing a Deposit
-;;     (create-checking-account 678767)
+  (testing "Creating an operation that turns a balance negative"
+    ;; Testing a Deposit
+    (create-checking-account 678767)
 
-;;     (create-operation-given-account 678767 "Test Deposit" "Salary Test" 6000.00 "2017-08-08")
-;;     (create-operation-given-account 678767 "Test Purchase" "Market Test" 7000.00 "2017-08-08")
+    ;; making an account balance negative
+    (create-operation-given-account 678767 "Test Deposit" "Salary Test" 6000.00 "2017-08-08")
+    (create-operation-given-account 678767 "Test Purchase" "A Big Operation" -7000.00 "2017-08-10")
 
-;;     (= (if (neg? -10) (true) ) true)
-;;   )
-;; )
+    (let [negative (update-map (get-period-account-was-balance-negative 678767 "2017-08-01" "2017-08-15"))]
+      (is (= (->> negative (first) (:principal)) -1000.00)))
+  )
+)
 
 
 
