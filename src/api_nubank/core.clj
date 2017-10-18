@@ -75,6 +75,18 @@
 ;; periods when the bank can
 ;; charge interest on that account
 
+(create-account 12345)
+
+(create-operation-given-account 12345 "Deposit" "Salary" 6000.00 "2017-01-01")
+(create-operation-given-account 12345 "Purchase" "Fast Shop" -7000.00 "2017-01-02")
+
+(create-operation-given-account 12345 "Purchase" "Bar do alemao" -10.00 "2017-01-05")
+
+
+(create-operation-given-account 12345 "Purchase" "Cafe linhares" -50.00 "2017-01-10")
+
+accounts
+
 (defn get-period-account-was-balance-negative
   "returns the periods which the account's balance was negative
   <account-number> Checking Account Number
@@ -83,10 +95,30 @@
   [account-number start-date end-date]
   (let [operation (get-last-operations-by-account account-number)]
    (->> operation (reduce-kv (fn [mp key value]
-                  (if (neg? (get-in operation [key :operation/balance]))
-                  (conj mp {:schedule (get-in operation [key :operation/schedule-date])
-                            :balance (get-in operation [key :operation/balance])}) mp))
-                  {}))
-))
+                  (if (neg? (get-in value [ :operation/balance]))
+                  (conj mp {:schedule (get-in value [:operation/schedule-date])
+                            :balance (get-in value [:operation/balance])}) mp))
+                  []))))
 
+
+;; (get-period-account-was-balance-negative 12345 "2017-01-01" "2017-12-31")
+
+
+(defn update-map [data]
+  (reduce-kv (fn [m k v]
+    (conj m   {:principal (:balance v)
+               :start (:schedule v)
+               :end (:schedule (get data (+ k 1)))})
+    ) [] data)
+)
+
+
+;; (let [negativo (get-period-account-was-balance-negative 12345 "2017-01-01" "2017-12-31")]
+;;   (->> negativo
+;;        (next)
+;;        (first)
+;;        (:schedule)
+;;        (-> assoc :end 100)
+;;   )
+;; )
 

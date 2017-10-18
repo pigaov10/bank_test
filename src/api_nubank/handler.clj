@@ -25,7 +25,7 @@
              (let [cast-id (read-string (get params "account_id"))
                    sdate (get params "start_date")
                    edate (get params "end_date")]
-               (response (get-period-account-was-balance-negative cast-id sdate edate))))
+               (response (update-map (get-period-account-was-balance-negative cast-id sdate edate)))))
 
 
            (GET "/balance/:id" [id]
