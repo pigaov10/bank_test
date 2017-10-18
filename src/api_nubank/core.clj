@@ -106,19 +106,17 @@ accounts
 
 (defn update-map [data]
   (reduce-kv (fn [m k v]
-    (conj m   {:principal (:balance v)
-               :start (:schedule v)
-               :end (:schedule (get data (+ k 1)))})
+    (if (nil? (:schedule (get data (+ k 1))) )
+      (conj m   {
+                :principal (:balance v)
+                :start (:schedule v)
+                })
+      (conj m   {
+                :principal (:balance v)
+                :start (:schedule v)
+                :end (:schedule (get data (+ k 1)))
+                }))
+
     ) [] data)
 )
-
-
-;; (let [negativo (get-period-account-was-balance-negative 12345 "2017-01-01" "2017-12-31")]
-;;   (->> negativo
-;;        (next)
-;;        (first)
-;;        (:schedule)
-;;        (-> assoc :end 100)
-;;   )
-;; )
 

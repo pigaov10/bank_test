@@ -25,7 +25,9 @@
              (let [cast-id (read-string (get params "account_id"))
                    sdate (get params "start_date")
                    edate (get params "end_date")]
-               (response (update-map (get-period-account-was-balance-negative cast-id sdate edate)))))
+               (response {:check-date (.format (java.text.SimpleDateFormat. "yyyy-MM-dd HH:mm:ss") (new java.util.Date))
+                          :checking-account cast-id
+                          :period-balance-negative (update-map (get-period-account-was-balance-negative cast-id sdate edate))})))
 
 
            (GET "/balance/:id" [id]
