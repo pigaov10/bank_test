@@ -12,16 +12,18 @@
   <description> A short description about operation
   <amount> transaction amount"
   [accounts checking-account-number type description amount date]
+  (let [])
   (get-in @accounts [:checking-accounts checking-account-number]
-    (swap! accounts
-           update-in [:checking-accounts checking-account-number :operations]
-           conj {:operation/description description
-                 :operation/amount amount
-                 :operation/type type
-                 :operation/balance (+ amount (reduce + 0
-                                              (map :operation/amount
-                                              (get-in @accounts [:checking-accounts
-                                                                 checking-account-number
-                                                                 :operations]))))
-                 :operation/purchase-date date})) accounts)
+          (swap! accounts
+                 update-in [:checking-accounts checking-account-number :operations]
+                 conj {:operation/description    description
+                       :operation/amount         amount
+                       :operation/type           type
+                       :operation/balance        (+ amount (reduce + 0
+                                                                   (map :operation/amount
+                                                                        (get-in @accounts [:checking-accounts
+                                                                                           checking-account-number
+                                                                                           :operations]))))
+                       :operation/operation-date (now)
+                       :operation/schedule-date  date})) accounts)
 

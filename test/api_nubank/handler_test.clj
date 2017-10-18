@@ -8,8 +8,9 @@
 
 
 (defn setup [f]
+  (defonce test_accounts accounts)
   (f)
-  (ns-unmap 'user 'accounts))
+  (ns-unmap 'user 'test_accounts))
 
 
 (use-fixtures :once setup)
@@ -17,17 +18,17 @@
 (deftest test-create-accounts
 
   (testing "After create bank collection, accounts must count zero"
-      (is (= (count (get accounts :checking-accounts)) 0)))
+      (is (= (count (get test_accounts :checking-accounts)) 0)))
 
   (testing "After create an account the keyword accounts must return 1"
     ;; Creating an Account
     (create-checking-account 123456)
 
       ;; test if brand new account have been created
-      (= "Checking Account" (get-in accounts [:checking-accounts 123456 :account/name]))
+      (= "Checking Account" (get-in test_accounts [:checking-accounts 123456 :account/name]))
 
       ;; operation array of 12345 account must return zero
-      (is (= (count (get-in accounts [:checking-accounts 123456 :operations])) 0))))
+      (is (= (count (get-in test_accounts [:checking-accounts 123456 :operations])) 0))))
 
 
 
@@ -36,16 +37,16 @@
   (testing "Creating an operation for a given account number"
 
     ;; Testing a Deposit
-    (create-operation-given-account 12345 "Test Deposit" "Salary Test" 6000.00 "2017-08-08" )
+    (create-operation-given-account 123456 "Test Deposit" "Salary Test" 6000.00 "2017-08-08" )
 
     ;; test transaction description
-    (= "Salary Test" (get-in accounts [:checking-accounts 123456 :operations :operation/description]))
+    (= "Salary Test" (get-in test_accounts [:checking-accounts 123456 :operations :operation/description]))
 
     ;; test transaction type
-    (= "Test Deposit" (get-in accounts [:checking-accounts 123456 :operations :operation/type]))
+    (= "Test Deposit" (get-in test_accounts [:checking-accounts 123456 :operations :operation/type]))
 
     ;; test transaction amount
-    (= 6000.00 (get-in accounts [:checking-accounts 123456 :operations :operation/amount]))
+    (= 6000.00 (get-in test_accounts [:checking-accounts 123456 :operations :operation/amount]))
 
   )
 )
@@ -54,19 +55,32 @@
 
   (testing "Creating an operation for a given account number"
     ;; Testing a Deposit
-    (create-operation-given-account 12345 "Test Deposit" "Salary Test" 6000.00 "2017-08-08" )
-    (create-operation-given-account 12345 "Test Purchase" "Market Test" -1000.00 "2017-08-08" )
-    (is (= (get-current-balance 12345) 5000.00))
+    (create-checking-account 54321)
+
+    (create-operation-given-account 54321 "Test Deposit" "Salary Test" 6000.00 "2017-08-08")
+    (create-operation-given-account 54321 "Test Purchase" "Market Test" -1000.00 "2017-08-08")
+
+    (is (= (get-current-balance 54321) 5000.00))
   )
 )
 
 
-(deftest test-payload-api-rest
+;; (deftest test-if-date-is-negative
 
-  (testing "Test if lein server is running correctlly"
-    (let [response (app (mock/request :get "/"))]
-      (is (= (:status response) 200))
-      (is (= (:body response) "API is running"))))
+;;   (testing "Creating an operation that turns a balance negative"
+;;     ;; Testing a Deposit
+;;     (create-checking-account 678767)
+
+;;     (create-operation-given-account 678767 "Test Deposit" "Salary Test" 6000.00 "2017-08-08")
+;;     (create-operation-given-account 678767 "Test Purchase" "Market Test" 7000.00 "2017-08-08")
+
+;;     (= (if (neg? -10) (true) ) true)
+;;   )
+;; )
+
+
+
+(deftest test-payload-api-rest
 
   (testing "An invalid Restful endpoint should return 404 status code"
     (let [response (app (mock/request :get "/invalid"))]

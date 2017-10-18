@@ -11,13 +11,11 @@
   (get-in @accounts [:checking-accounts account-number :operations]))
 
 
-
 (defn create-account
   "Create a checking account
   <account-number> Checking Account Number"
   [account-number]
   (create-checking-account account-number))
-
 
 ;; Step One
 ;; can add an operation to a given checking
@@ -45,7 +43,8 @@
   <checking-account-number> Checking Account Number"
   [account-number]
   (let [operations (get-last-operations-by-account account-number)]
-    (get (first operations) :operation/balance) ))
+    (if-not (nil? (get (last operations) :operation/balance))
+    (get (last operations) :operation/balance) 0 )))
 
 
 ;; Step Three
@@ -63,9 +62,10 @@
     (->> operation
       (filter
       #(and
-           (>= (compare (% :operation/purchase-date) start-date) 0)
-           (<= (compare (% :operation/purchase-date) end-date) 0)))
-      (group-by :operation/purchase-date))
+           (>= (compare (% :operation/schedule-date) start-date) 0)
+           (<= (compare (% :operation/schedule-date) end-date) 0)))
+      (group-by :operation/schedule-date))
+
 ))
 
 
@@ -84,12 +84,9 @@
   (let [operation (get-last-operations-by-account account-number)]
    (->> operation (reduce-kv (fn [mp key value]
                   (if (neg? (get-in operation [key :operation/balance]))
-                  (conj mp value)
-                  (println (str "It's not negative" value) )))
-                  {})
-                  (group-by :operation/purchase-date))
+                  (conj mp {:schedule (get-in operation [key :operation/schedule-date])
+                            :balance (get-in operation [key :operation/balance])}) mp))
+                  {}))
 ))
 
 
-
-;; (get-period-account-was-balance-negative 12345 "2017-08-01" "2017-10-10")
